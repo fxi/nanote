@@ -116,18 +116,17 @@ export function NoteList({
             <ul className="space-y-1">
               {notes.map((note) => (
                 <li key={note.id} className="group">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handleNoteSelect(note.id)}
-                      className={cn(
-                        "flex-1 text-left px-3 py-2 rounded-md text-sm",
-                        "transition-colors duration-200 ease-in-out",
-                        "hover:bg-accent hover:text-accent-foreground",
-                        activeNoteId === note.id 
-                          ? "bg-accent text-accent-foreground" 
-                          : "text-foreground"
-                      )}
-                    >
+                  <button
+                    onClick={handleNoteSelect(note.id)}
+                    className={cn(
+                      "w-full text-left px-3 py-2 rounded-md text-sm flex flex-col",
+                      "transition-colors duration-200 ease-in-out",
+                      "hover:bg-accent hover:text-accent-foreground",
+                      activeNoteId === note.id
+                        ? "bg-accent text-accent-foreground"
+                        : "text-foreground"
+                    )}
+                  >
                       {editingNoteId === note.id ? (
                         <input
                           ref={titleInputRef}
@@ -147,31 +146,30 @@ export function NoteList({
                           {note.title || 'Untitled'}
                         </div>
                       )}
-                      <div className="text-xs text-muted-foreground truncate">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={handleDownload(note)}
+                          title="Download note"
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive"
+                          onClick={handleDelete(note.id)}
+                          title="Delete note"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="text-xs text-muted-foreground truncate mt-1">
                         {formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true })}
                       </div>
                     </button>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity pr-2 flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={handleDownload(note)}
-                        title="Download note"
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive"
-                        onClick={handleDelete(note.id)}
-                        title="Delete note"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
                 </li>
               ))}
             </ul>
