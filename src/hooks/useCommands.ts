@@ -3,7 +3,7 @@ import { CommandAction } from '@/types';
 
 interface UseCommandsProps {
   createNote: () => void;
-  deleteNote: () => void;
+  archiveNote: () => void;
   saveNote: () => void;
   enterInsertMode: () => void;
   enterNormalMode: () => void;
@@ -13,7 +13,7 @@ interface UseCommandsProps {
 
 export function useCommands({
   createNote,
-  deleteNote,
+  archiveNote,
   saveNote,
   enterInsertMode,
   enterNormalMode,
@@ -30,11 +30,11 @@ export function useCommands({
       action: createNote,
     },
     {
-      id: 'delete-note',
-      name: 'Delete Note',
+      id: 'archive-note',
+      name: 'Archive Note',
       shortcut: 'dd',
-      description: 'Delete the current note',
-      action: deleteNote,
+      description: 'Archive the current note',
+      action: archiveNote,
     },
     {
       id: 'save-note',
