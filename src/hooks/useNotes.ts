@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Note } from '@/types';
-import { loadNotes, saveNotes, createNote, updateNote, deleteNote } from '@/lib/storage';
+import { loadNotes, saveNotes, createNote, updateNote, deleteNotes, archiveNote } from '@/lib/storage';
 
 export function useNotes() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const activeNote = activeNoteId 
-    ? notes.find(note => note.id === activeNoteId) 
-    : notes.length > 0 ? notes[0] : null;
+  const activeNote = activeNoteId
+    ? notes.find(note => note.id === activeNoteId && !note.archived) || null
+    : notes.find(note => !note.archived) || null;
 
   useEffect(() => {
     const loadedNotes = loadNotes();
     setNotes(loadedNotes);
-    
-    if (loadedNotes.length > 0 && !activeNoteId) {
-      setActiveNoteId(loadedNotes[0].id);
+
+    const firstActive = loadedNotes.find(n => !n.archived);
+    if (firstActive && !activeNoteId) {
+      setActiveNoteId(firstActive.id);
     } else if (loadedNotes.length === 0) {
       const initialNotes = createNote([], 'Welcome to nanote');
       setNotes(initialNotes);
@@ -44,17 +45,32 @@ export function useNotes() {
     setNotes((currentNotes) => updateNote(currentNotes, id, updates));
   };
 
-  const handleDeleteNote = (id: string) => {
-    setNotes((currentNotes) => deleteNote(currentNotes, id));
-    
-    if (activeNoteId === id && notes.length > 1) {
-      const nextNoteId = notes.find(note => note.id !== id)?.id;
-      setActiveNoteId(nextNoteId || null);
-    } else if (notes.length <= 1) {
-      const newNotes = createNote([], 'Untitled Note');
-      setNotes(newNotes);
-      setActiveNoteId(newNotes[0].id);
-    }
+  const handleArchiveNote = (id: string) => {
+    setNotes((currentNotes) => {
+      const updated = archiveNote(currentNotes, id);
+      if (activeNoteId === id) {
+        const next = updated.find(n => n.id !== id && !n.archived);
+        if (next) {
+          setActiveNoteId(next.id);
+        } else {
+          const newList = createNote(updated, 'Untitled Note');
+          setActiveNoteId(newList[0].id);
+          return newList;
+        }
+      }
+      return updated;
+    });
+  };
+
+  const handleDeleteNotes = (ids: string[]) => {
+    setNotes((currentNotes) => {
+      const updated = deleteNotes(currentNotes, ids);
+      if (ids.includes(activeNoteId || '')) {
+        const next = updated.find(n => !n.archived);
+        setActiveNoteId(next ? next.id : null);
+      }
+      return updated.length > 0 ? updated : createNote([], 'Untitled Note');
+    });
   };
 
   return {
@@ -64,7 +80,8 @@ export function useNotes() {
     setActiveNoteId,
     createNote: handleCreateNote,
     updateNote: handleUpdateNote,
-    deleteNote: handleDeleteNote,
+    archiveNote: handleArchiveNote,
+    deleteNotes: handleDeleteNotes,
     isLoading,
   };
 }

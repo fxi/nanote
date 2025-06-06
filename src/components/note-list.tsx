@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Note } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
-import { Plus, Trash2, Download } from 'lucide-react';
+import { Plus, Archive, Download } from 'lucide-react';
+import { ArchiveDialog } from '@/components/archive-dialog';
 import { downloadNote } from '@/lib/storage';
 
 interface NoteListProps {
@@ -12,19 +13,24 @@ interface NoteListProps {
   activeNoteId: string | null;
   onNoteSelect: (id: string) => void;
   onCreateNote: () => void;
-  onDeleteNote: (id: string) => void;
+  onArchiveNote: (id: string) => void;
+  onDeleteArchived: (ids: string[]) => void;
 }
 
-export function NoteList({ 
-  notes, 
-  activeNoteId, 
-  onNoteSelect, 
+export function NoteList({
+  notes,
+  activeNoteId,
+  onNoteSelect,
   onCreateNote,
-  onDeleteNote
+  onArchiveNote,
+  onDeleteArchived
 }: NoteListProps) {
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
   const titleInputRef = useRef<HTMLInputElement>(null);
+
+  const activeNotes = notes.filter(n => !n.archived);
+  const archivedNotes = notes.filter(n => n.archived);
 
   useEffect(() => {
     if (editingNoteId && titleInputRef.current) {
@@ -44,10 +50,10 @@ export function NoteList({
     downloadNote(note);
   };
 
-  const handleDelete = (id: string) => (e: React.MouseEvent) => {
+  const handleArchive = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onDeleteNote(id);
+    onArchiveNote(id);
   };
 
   const startEditing = (note: Note) => (e: React.MouseEvent) => {
@@ -91,11 +97,12 @@ export function NoteList({
 
   return (
     <div className="h-full flex flex-col border-r">
-      <div className="p-4 border-b flex justify-between items-center">
+      <div className="p-4 border-b flex justify-between items-center gap-2">
         <h2 className="font-semibold text-sm">Notes</h2>
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <ArchiveDialog notes={archivedNotes} onDelete={onDeleteArchived} />
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={(e) => {
             e.preventDefault();
             onCreateNote();
@@ -108,13 +115,13 @@ export function NoteList({
       
       <ScrollArea className="flex-1">
         <div className="px-2 py-2">
-          {notes.length === 0 ? (
+          {activeNotes.length === 0 ? (
             <p className="text-center text-muted-foreground text-sm p-4">
               No notes yet. Create one to get started.
             </p>
           ) : (
             <ul className="space-y-1">
-              {notes.map((note) => (
+              {activeNotes.map((note) => (
                 <li key={note.id} className="group">
                   <button
                     onClick={handleNoteSelect(note.id)}
@@ -160,10 +167,10 @@ export function NoteList({
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-destructive"
-                          onClick={handleDelete(note.id)}
-                          title="Delete note"
+                          onClick={handleArchive(note.id)}
+                          title="Archive note"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Archive className="h-4 w-4" />
                         </Button>
                       </div>
                       <div className="text-xs text-muted-foreground truncate mt-1">

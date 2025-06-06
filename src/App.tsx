@@ -9,9 +9,10 @@ function App() {
     activeNote, 
     activeNoteId, 
     setActiveNoteId, 
-    createNote, 
-    updateNote, 
-    deleteNote 
+    createNote,
+    updateNote,
+    archiveNote,
+    deleteNotes
   } = useNotes();
 
   useEffect(() => {
@@ -37,12 +38,13 @@ function App() {
     <div className="h-screen flex flex-col">
       <div className="flex-1 flex overflow-hidden">
         <div className="w-64 h-full">
-          <NoteList 
+          <NoteList
             notes={notes}
             activeNoteId={activeNoteId}
             onNoteSelect={setActiveNoteId}
             onCreateNote={createNote}
-            onDeleteNote={deleteNote}
+            onArchiveNote={archiveNote}
+            onDeleteArchived={deleteNotes}
           />
         </div>
         

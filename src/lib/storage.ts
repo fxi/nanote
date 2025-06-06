@@ -29,8 +29,9 @@ export const createNote = (notes: Note[], title?: string): Note[] => {
     content: '',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    archived: false,
   };
-  
+
   return [newNote, ...notes];
 };
 
@@ -49,6 +50,19 @@ export const updateNote = (notes: Note[], id: string, updates: Partial<Note>): N
 
 export const deleteNote = (notes: Note[], id: string): Note[] => {
   return notes.filter((note) => note.id !== id);
+};
+
+export const deleteNotes = (notes: Note[], ids: string[]): Note[] => {
+  const idSet = new Set(ids);
+  return notes.filter((note) => !idSet.has(note.id));
+};
+
+export const archiveNote = (notes: Note[], id: string): Note[] => {
+  return updateNote(notes, id, { archived: true });
+};
+
+export const unarchiveNote = (notes: Note[], id: string): Note[] => {
+  return updateNote(notes, id, { archived: false });
 };
 
 export const downloadNote = (note: Note) => {
