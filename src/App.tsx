@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Editor } from '@/components/editor';
 import { NoteList } from '@/components/note-list';
 import { useNotes } from '@/hooks/useNotes';
@@ -12,6 +12,7 @@ function App() {
     createNote,
     updateNote,
     archiveNote,
+    unarchiveNote,
     deleteNotes
   } = useNotes();
 
@@ -44,6 +45,7 @@ function App() {
             onNoteSelect={setActiveNoteId}
             onCreateNote={createNote}
             onArchiveNote={archiveNote}
+            onUnarchiveNote={unarchiveNote}
             onDeleteArchived={deleteNotes}
           />
         </div>

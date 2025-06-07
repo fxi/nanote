@@ -26,5 +26,20 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/components/command-bar.tsx",
+    "src/components/status-bar.tsx",
+    "src/hooks/useCommands.ts",
+    "src/hooks/useEditorMode.ts",
+    "src/components/ui/calendar.tsx",
+    "src/components/ui/carousel.tsx",
+    "src/components/ui/chart.tsx",
+    "src/components/ui/command.tsx",
+    "src/components/ui/drawer.tsx",
+    "src/components/ui/form.tsx",
+    "src/components/ui/input-otp.tsx",
+    "src/components/ui/resizable.tsx",
+    "src/components/ui/sonner.tsx"
+  ]
 }
