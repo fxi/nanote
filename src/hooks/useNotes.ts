@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Note } from '@/types';
-import { loadNotes, saveNotes, createNote, updateNote, deleteNotes, archiveNote } from '@/lib/storage';
+import { loadNotes, saveNotes, createNote, updateNote, deleteNotes, archiveNote, unarchiveNote } from '@/lib/storage';
 
 export function useNotes() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -62,6 +62,10 @@ export function useNotes() {
     });
   };
 
+  const handleUnarchiveNote = (id: string) => {
+    setNotes((currentNotes) => unarchiveNote(currentNotes, id));
+  };
+
   const handleDeleteNotes = (ids: string[]) => {
     setNotes((currentNotes) => {
       const updated = deleteNotes(currentNotes, ids);
@@ -81,6 +85,7 @@ export function useNotes() {
     createNote: handleCreateNote,
     updateNote: handleUpdateNote,
     archiveNote: handleArchiveNote,
+    unarchiveNote: handleUnarchiveNote,
     deleteNotes: handleDeleteNotes,
     isLoading,
   };
