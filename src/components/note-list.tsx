@@ -175,7 +175,7 @@ export function NoteList({
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <Collapsible open={notesOpen} onOpenChange={setNotesOpen} className="flex flex-col h-full">
+        <Collapsible open={notesOpen} onOpenChange={setNotesOpen} className="flex flex-col">
           <div className="flex items-center justify-between px-2 py-2 border-b">
             <CollapsibleTrigger asChild>
               <button className="flex items-center gap-1 font-semibold text-sm">
@@ -258,7 +258,7 @@ export function NoteList({
           </CollapsibleContent>
         </Collapsible>
 
-        <Collapsible open={archivedOpen} onOpenChange={setArchivedOpen} className="flex flex-col h-full">
+        <Collapsible open={archivedOpen} onOpenChange={setArchivedOpen} className="flex flex-col">
           <div className="flex items-center justify-between px-2 py-2 border-b">
             <CollapsibleTrigger asChild>
               <button className="flex items-center gap-1 font-semibold text-sm">
