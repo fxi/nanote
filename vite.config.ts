@@ -9,7 +9,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: './', // For GitHub Pages deployment
+  base: '/nanote/',
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
@@ -18,3 +18,4 @@ export default defineConfig({
     globals: true
   }
 });
+
