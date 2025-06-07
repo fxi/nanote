@@ -18,7 +18,6 @@ import {
   ChevronDown,
   ChevronRight,
 } from 'lucide-react';
-import { ArchiveDialog } from '@/components/archive-dialog';
 import { downloadNote } from '@/lib/storage';
 
 interface NoteListProps {
@@ -28,7 +27,6 @@ interface NoteListProps {
   onCreateNote: () => void;
   onArchiveNote: (id: string) => void;
   onUnarchiveNote: (id: string) => void;
-  onDeleteArchived: (ids: string[]) => void;
 }
 
 export function NoteList({
@@ -37,8 +35,7 @@ export function NoteList({
   onNoteSelect,
   onCreateNote,
   onArchiveNote,
-  onUnarchiveNote,
-  onDeleteArchived
+  onUnarchiveNote
 }: NoteListProps) {
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
@@ -58,9 +55,13 @@ export function NoteList({
     }
   }, [editingNoteId]);
 
-  const handleNoteSelect = (id: string) => (e: React.MouseEvent) => {
+  const handleNoteSelect = (id: string, archived = false) => (
+    e: React.MouseEvent
+  ) => {
     e.preventDefault();
-    onNoteSelect(id);
+    if (!archived) {
+      onNoteSelect(id);
+    }
   };
 
   const handleCheckbox = (id: string, list: Note[], e: React.MouseEvent) => {
@@ -159,7 +160,6 @@ export function NoteList({
       <div className="p-4 border-b flex justify-between items-center gap-2">
         <h2 className="font-semibold text-sm">nanote</h2>
         <div className="flex items-center gap-2">
-          <ArchiveDialog notes={archivedNotes} onDelete={onDeleteArchived} />
           <Button
             variant="ghost"
             size="icon"
@@ -197,7 +197,7 @@ export function NoteList({
                   </p>
                 ) : (
                   <ul className="space-y-1">
-                    {activeNotes.map((note) => (
+                      {activeNotes.map((note) => (
                       <li key={note.id} className="group">
                         <button
                           onClick={handleNoteSelect(note.id)}
@@ -281,7 +281,7 @@ export function NoteList({
                     {archivedNotes.map(note => (
                       <li key={note.id} className="group">
                         <button
-                          onClick={handleNoteSelect(note.id)}
+                          onClick={handleNoteSelect(note.id, true)}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-md text-sm flex flex-col",
                             "transition-colors duration-200 ease-in-out",
