@@ -12,8 +12,7 @@ function App() {
     createNote,
     updateNote,
     archiveNote,
-    unarchiveNote,
-    deleteNotes
+    unarchiveNote
   } = useNotes();
 
   useEffect(() => {
@@ -46,7 +45,6 @@ function App() {
             onCreateNote={createNote}
             onArchiveNote={archiveNote}
             onUnarchiveNote={unarchiveNote}
-            onDeleteArchived={deleteNotes}
           />
         </div>
         
