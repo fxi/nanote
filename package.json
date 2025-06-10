@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "desktop": "tauri dev",
+    "desktop:build": "tauri build"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
@@ -50,6 +52,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@tauri-apps/cli": "^2.5.0",
     "@types/node": "^22.7.3",
     "@types/react": "^18.3.9",
     "@types/react-dom": "^18.3.0",
