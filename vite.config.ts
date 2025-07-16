@@ -9,7 +9,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: '/nanote/',
+  // Use relative paths for Tauri desktop builds, absolute path for web deployment
+  base: process.env.BUILD_TARGET === 'desktop' ? './' : '/nanote/',
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
