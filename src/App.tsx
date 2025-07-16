@@ -77,7 +77,8 @@ function App() {
   );
 
   return (
-    <div className="h-[100dvh] flex flex-col">
+    <div className="h-full flex flex-col">
+
       <header className="p-2 border-b flex items-center gap-2">
         <input
           className="flex-1 min-w-0 bg-transparent outline-none text-lg font-medium"
