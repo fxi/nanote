@@ -23,7 +23,7 @@ export function Editor({ note, onContentChange }: EditorProps) {
     if (textareaRef.current) {
       textareaRef.current.focus();
     }
-  }, [note]);
+  }, [note?.id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
@@ -32,7 +32,7 @@ export function Editor({ note, onContentChange }: EditorProps) {
   };
 
   return (
-    <div className="relative h-full flex flex-col">
+    <div className="relative h-full flex flex-col overflow-auto">
       <textarea
         ref={textareaRef}
         value={content}

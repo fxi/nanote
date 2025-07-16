@@ -59,8 +59,13 @@
   * {
     @apply border-border;
   }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-hidden m-0;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

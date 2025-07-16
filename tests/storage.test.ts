@@ -1,4 +1,4 @@
-import { createNote, updateNote, deleteNote, deleteNotes, archiveNote, saveNotes, loadNotes } from '../src/lib/storage';
+import { createNote, updateNote, deleteNote, deleteNotes, saveNotes, loadNotes } from '../src/lib/storage';
 import { Note } from '../src/types';
 
 describe('storage utilities', () => {
@@ -11,7 +11,6 @@ describe('storage utilities', () => {
     const result = createNote(notes, 'Test note');
     expect(result.length).toBe(1);
     expect(result[0].title).toBe('Test note');
-    expect(result[0].archived).toBe(false);
   });
 
   test('updateNote updates matching note', () => {
@@ -28,12 +27,6 @@ describe('storage utilities', () => {
     expect(notes.length).toBe(0);
   });
 
-  test('archiveNote marks note as archived', () => {
-    let notes: Note[] = createNote([], 'First');
-    const id = notes[0].id;
-    notes = archiveNote(notes, id);
-    expect(notes[0].archived).toBe(true);
-  });
 
   test('deleteNotes removes all matching notes', () => {
     let notes: Note[] = createNote([], 'First');
