@@ -4,5 +4,4 @@ export interface Note {
   content: string;
   createdAt: string;
   updatedAt: string;
-  archived: boolean;
 }
