@@ -28,6 +28,7 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { downloadNote } from '@/lib/storage';
 import { Trash2, ExternalLink } from 'lucide-react';
 
@@ -68,7 +69,8 @@ export function NoteManager({ notes, onOpenNote, onDeleteNotes, trigger }: NoteM
         <DialogHeader>
           <DialogTitle>Manage Notes</DialogTitle>
         </DialogHeader>
-        <Table>
+        <ScrollArea className="h-[50vh]">
+        <Table className="table-fixed">
           <TableHeader>
             <TableRow>
               <TableHead className="w-8" />
@@ -82,7 +84,7 @@ export function NoteManager({ notes, onOpenNote, onDeleteNotes, trigger }: NoteM
                 <TableCell className="w-8">
                   <Checkbox checked={selected.includes(note.id)} onCheckedChange={() => toggle(note.id)} />
                 </TableCell>
-                <TableCell className="truncate">
+                <TableCell className="max-w-0 truncate">
                   {note.title || 'Untitled'} - {note.content.slice(0, 20)}
                 </TableCell>
                 <TableCell className="flex justify-end gap-2">
@@ -115,6 +117,7 @@ export function NoteManager({ notes, onOpenNote, onDeleteNotes, trigger }: NoteM
             ))}
           </TableBody>
         </Table>
+        </ScrollArea>
         {selected.length > 0 && (
           <div className="flex justify-between mt-4">
             <Button variant="destructive" onClick={() => setConfirm(true)}>

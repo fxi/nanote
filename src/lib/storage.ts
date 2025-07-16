@@ -15,9 +15,10 @@ export const loadNotes = (): Note[] => {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) return [];
-    const parsed: any[] = JSON.parse(data);
+    const parsed: Partial<Note & { archived?: boolean }>[] = JSON.parse(data);
     // Migrate notes that may include an archived flag
     return parsed.map(n => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { archived, ...rest } = n;
       return rest as Note;
     });
