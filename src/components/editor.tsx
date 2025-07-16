@@ -32,7 +32,7 @@ export function Editor({ note, onContentChange }: EditorProps) {
   };
 
   return (
-    <div className="relative h-full flex flex-col">
+    <div className="relative h-full flex flex-col overflow-auto">
       <textarea
         ref={textareaRef}
         value={content}
