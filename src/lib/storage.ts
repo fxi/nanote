@@ -14,7 +14,13 @@ export const saveNotes = (notes: Note[]): void => {
 export const loadNotes = (): Note[] => {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+    const parsed: any[] = JSON.parse(data);
+    // Migrate notes that may include an archived flag
+    return parsed.map(n => {
+      const { archived, ...rest } = n;
+      return rest as Note;
+    });
   } catch (error) {
     console.error('Failed to load notes from localStorage:', error);
     return [];
@@ -29,7 +35,6 @@ export const createNote = (notes: Note[], title?: string): Note[] => {
     content: '',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    archived: false,
   };
 
   return [newNote, ...notes];
@@ -55,14 +60,6 @@ export const deleteNote = (notes: Note[], id: string): Note[] => {
 export const deleteNotes = (notes: Note[], ids: string[]): Note[] => {
   const idSet = new Set(ids);
   return notes.filter((note) => !idSet.has(note.id));
-};
-
-export const archiveNote = (notes: Note[], id: string): Note[] => {
-  return updateNote(notes, id, { archived: true });
-};
-
-export const unarchiveNote = (notes: Note[], id: string): Note[] => {
-  return updateNote(notes, id, { archived: false });
 };
 
 export const downloadNote = (note: Note) => {

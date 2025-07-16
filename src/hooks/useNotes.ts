@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Note } from '@/types';
-import { loadNotes, saveNotes, createNote, updateNote, deleteNotes, archiveNote, unarchiveNote } from '@/lib/storage';
+import { loadNotes, saveNotes, createNote, updateNote, deleteNotes } from '@/lib/storage';
 
 export function useNotes() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -8,17 +8,18 @@ export function useNotes() {
   const [isLoading, setIsLoading] = useState(true);
 
   const activeNote = activeNoteId
-    ? notes.find(note => note.id === activeNoteId && !note.archived) || null
-    : notes.find(note => !note.archived) || null;
+    ? notes.find(note => note.id === activeNoteId) || null
+    : notes[0] || null;
 
   useEffect(() => {
     const loadedNotes = loadNotes();
     setNotes(loadedNotes);
 
-    const firstActive = loadedNotes.find(n => !n.archived);
-    if (firstActive && !activeNoteId) {
-      setActiveNoteId(firstActive.id);
-    } else if (loadedNotes.length === 0) {
+    if (loadedNotes.length > 0) {
+      if (!activeNoteId) {
+        setActiveNoteId(loadedNotes[0].id);
+      }
+    } else {
       const initialNotes = createNote([], 'Welcome to nanote');
       setNotes(initialNotes);
       setActiveNoteId(initialNotes[0].id);
@@ -45,33 +46,12 @@ export function useNotes() {
     setNotes((currentNotes) => updateNote(currentNotes, id, updates));
   };
 
-  const handleArchiveNote = (id: string) => {
-    setNotes((currentNotes) => {
-      const updated = archiveNote(currentNotes, id);
-      if (activeNoteId === id) {
-        const next = updated.find(n => n.id !== id && !n.archived);
-        if (next) {
-          setActiveNoteId(next.id);
-        } else {
-          const newList = createNote(updated, 'Untitled Note');
-          setActiveNoteId(newList[0].id);
-          return newList;
-        }
-      }
-      return updated;
-    });
-  };
-
-  const handleUnarchiveNote = (id: string) => {
-    setNotes((currentNotes) => unarchiveNote(currentNotes, id));
-  };
 
   const handleDeleteNotes = (ids: string[]) => {
-    setNotes((currentNotes) => {
+    setNotes(currentNotes => {
       const updated = deleteNotes(currentNotes, ids);
       if (ids.includes(activeNoteId || '')) {
-        const next = updated.find(n => !n.archived);
-        setActiveNoteId(next ? next.id : null);
+        setActiveNoteId(updated[0] ? updated[0].id : null);
       }
       return updated.length > 0 ? updated : createNote([], 'Untitled Note');
     });
@@ -84,8 +64,6 @@ export function useNotes() {
     setActiveNoteId,
     createNote: handleCreateNote,
     updateNote: handleUpdateNote,
-    archiveNote: handleArchiveNote,
-    unarchiveNote: handleUnarchiveNote,
     deleteNotes: handleDeleteNotes,
     isLoading,
   };
