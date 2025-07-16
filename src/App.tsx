@@ -78,23 +78,20 @@ function App() {
 
   return (
     <div className="h-[100dvh] flex flex-col">
-      <header className="p-2 border-b flex items-center justify-between">
+      <header className="p-2 border-b flex items-center gap-2">
         <input
-          className="flex-1 bg-transparent outline-none text-lg font-medium"
+          className="flex-1 min-w-0 bg-transparent outline-none text-lg font-medium"
           value={title}
           onChange={handleTitleChange}
           placeholder="Untitled"
         />
-        <div className="hidden sm:flex gap-2 ml-2">
+        <div className="flex gap-2 flex-shrink-0">
           <Controls />
         </div>
       </header>
-      <main className="flex-1 overflow-auto pb-16">
+      <main className="flex-1 overflow-hidden">
         <Editor note={activeNote} onContentChange={handleContentChange} />
       </main>
-      <footer className="sm:hidden sticky bottom-0 inset-x-0 p-2 border-t bg-background flex justify-center gap-2">
-        <Controls />
-      </footer>
     </div>
   );
 }
