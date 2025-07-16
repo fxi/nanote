@@ -89,10 +89,10 @@ function App() {
           <Controls />
         </div>
       </header>
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pb-16">
         <Editor note={activeNote} onContentChange={handleContentChange} />
       </main>
-      <footer className="sm:hidden fixed bottom-0 inset-x-0 p-2 border-t bg-background flex justify-center gap-2">
+      <footer className="sm:hidden sticky bottom-0 inset-x-0 p-2 border-t bg-background flex justify-center gap-2">
         <Controls />
       </footer>
     </div>
