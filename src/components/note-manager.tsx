@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { downloadNote } from '@/lib/storage';
-import { Trash2, ExternalLink } from 'lucide-react';
+import { Trash2, Download } from 'lucide-react';
 
 interface NoteManagerProps {
   notes: Note[];
@@ -84,12 +84,12 @@ export function NoteManager({ notes, onOpenNote, onDeleteNotes, trigger }: NoteM
                 <TableCell className="w-8">
                   <Checkbox checked={selected.includes(note.id)} onCheckedChange={() => toggle(note.id)} />
                 </TableCell>
-                <TableCell className="max-w-0 truncate">
+                <TableCell className="max-w-0 truncate cursor-pointer" onClick={() => onOpenNote(note.id)}>
                   {note.title || 'Untitled'} - {note.content.slice(0, 20)}
                 </TableCell>
                 <TableCell className="flex justify-end gap-2">
-                  <Button size="icon" variant="ghost" onClick={() => onOpenNote(note.id)} title="Open">
-                    <ExternalLink className="w-4 h-4" />
+                  <Button size="icon" variant="ghost" onClick={() => downloadNote(note)} title="Download">
+                    <Download className="w-4 h-4" />
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

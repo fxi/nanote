@@ -14,9 +14,12 @@ export function useNotes() {
   useEffect(() => {
     const loadedNotes = loadNotes();
     setNotes(loadedNotes);
-
+    
     if (loadedNotes.length > 0) {
-      if (!activeNoteId) {
+      const currentActiveId = activeNoteId;
+      const isCurrentActiveIdValid = loadedNotes.some(note => note.id === currentActiveId);
+      
+      if (!isCurrentActiveIdValid) {
         setActiveNoteId(loadedNotes[0].id);
       }
     } else {
@@ -27,7 +30,7 @@ export function useNotes() {
     }
     
     setIsLoading(false);
-  }, []);
+  }, [activeNoteId]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -53,7 +56,9 @@ export function useNotes() {
       if (ids.includes(activeNoteId || '')) {
         setActiveNoteId(updated[0] ? updated[0].id : null);
       }
-      return updated.length > 0 ? updated : createNote([], 'Untitled Note');
+      const finalNotes = updated.length > 0 ? updated : createNote([], 'Untitled Note');
+      saveNotes(finalNotes);
+      return finalNotes;
     });
   };
 
