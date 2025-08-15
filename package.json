@@ -11,7 +11,7 @@
     "test": "vitest run",
     "desktop": "tauri dev",
     "desktop:build": "BUILD_TARGET=desktop tauri build",
-    "pwa": "pwa-assets-generator --preset minimal-2023 src/logo/logo.svg"
+    "pwa": "pwa-assets-generator --preset minimal-2023 public/logo.svg"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
@@ -57,7 +57,6 @@
     "@types/node": "^22.7.3",
     "@types/react": "^18.3.9",
     "@types/react-dom": "^18.3.0",
-    "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.11.1",
@@ -70,7 +69,6 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.7.0",
     "vite": "^5.4.8",
-    "vite-plugin-pwa": "^1.0.2",
     "vitest": "^1.5.0"
   }
 }
