@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/nanote/dev-sw.js?dev-sw', { scope: '/nanote/', type: 'classic' })
