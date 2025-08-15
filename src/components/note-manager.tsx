@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import Fuse from 'fuse.js';
 import { Note } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogTrigger,
@@ -20,14 +22,6 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-} from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { downloadNote } from '@/lib/storage';
 import { Trash2, Download } from 'lucide-react';
@@ -43,6 +37,16 @@ export function NoteManager({ notes, onOpenNote, onDeleteNotes, trigger }: NoteM
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [confirm, setConfirm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const fuse = useMemo(() => new Fuse(notes, {
+    keys: ['title', 'content'],
+    threshold: 0.3,
+  }), [notes]);
+
+  const filteredNotes = searchQuery
+    ? fuse.search(searchQuery).map(result => result.item)
+    : notes;
 
   const toggle = (id: string) => {
     setSelected(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
@@ -69,25 +73,22 @@ export function NoteManager({ notes, onOpenNote, onDeleteNotes, trigger }: NoteM
         <DialogHeader>
           <DialogTitle>Manage Notes</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="h-[50vh]">
-        <Table className="table-fixed">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-8" />
-              <TableHead>Title</TableHead>
-              <TableHead className="w-24 text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {notes.map(note => (
-              <TableRow key={note.id}>
-                <TableCell className="w-8">
-                  <Checkbox checked={selected.includes(note.id)} onCheckedChange={() => toggle(note.id)} />
-                </TableCell>
-                <TableCell className="max-w-0 truncate cursor-pointer" onClick={() => onOpenNote(note.id)}>
-                  {note.title || 'Untitled'} - {note.content.slice(0, 20)}
-                </TableCell>
-                <TableCell className="flex justify-end gap-2">
+        <div className="p-2">
+          <Input
+            placeholder="Filter..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <ScrollArea className="h-[45vh]">
+          <div className="space-y-2 p-2">
+            {filteredNotes.map(note => (
+              <div key={note.id} className="flex items-center gap-2 p-2 rounded-md hover:bg-muted">
+                <Checkbox checked={selected.includes(note.id)} onCheckedChange={() => toggle(note.id)} />
+                <div className="flex-1 truncate cursor-pointer" onClick={() => onOpenNote(note.id)}>
+                  {note.title || 'Untitled'} - <span className="text-sm text-muted-foreground">{note.content.slice(0, 20)}</span>
+                </div>
+                <div className="flex items-center gap-2">
                   <Button size="icon" variant="ghost" onClick={() => downloadNote(note)} title="Download">
                     <Download className="w-4 h-4" />
                   </Button>
@@ -112,11 +113,10 @@ export function NoteManager({ notes, onOpenNote, onDeleteNotes, trigger }: NoteM
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                </TableCell>
-              </TableRow>
+                </div>
+              </div>
             ))}
-          </TableBody>
-        </Table>
+          </div>
         </ScrollArea>
         {selected.length > 0 && (
           <div className="flex justify-between mt-4">
